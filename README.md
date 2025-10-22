@@ -55,46 +55,83 @@ cd Vaadin
 ```
 
 ### 2. Build the Application
+
+#### Option A: Using Build Scripts (Recommended)
 ```bash
-mvn clean package -DskipTests
+# Full build with tests
+./build.sh
+
+# Quick build without tests (for development)
+./quick-build.sh
 ```
 
-### 2. Database Migration (Flyway)
-Run database migrations with Flyway before application startup:
+#### Option B: Manual Maven Build
 ```bash
-docker-compose up flyway
-```
-یا برای اجرای همزمان با سایر سرویس‌ها:
-```bash
-docker-compose up
-```
-Flyway به صورت خودکار اسکریپت‌های  `src/main/resources/db/migration`  را اجرا می‌کند. [Updated for Flyway]
+# Set Java 21
+export JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64
+export PATH=$JAVA_HOME/bin:$PATH
 
-### 3. Run with Docker Compose
+# Build application
+mvn clean package
+```
+
+### 3. Run the Application
+
+#### Option A: Using JAR file
 ```bash
+java -jar target/music-school-management-1.0.0.jar
+```
+
+#### Option B: Using Maven
+```bash
+mvn spring-boot:run
+```
+
+#### Option C: Using Docker
+```bash
+# Build and run with Docker Compose
+docker-compose up --build
+
+# Or run in background
 docker-compose up -d
 ```
 
 ### 4. Access the Application
-- **Application**: http://localhost:8080/music-school
+- **Application**: http://localhost:8080
 - **Grafana**: http://localhost:3000 (admin/admin123)
 - **Prometheus**: http://localhost:9090
-- **CockroachDB Admin**: http://localhost:8081
+- **Database Admin**: http://localhost:8081
 
 ## 🔧 Development Setup
 
+### Prerequisites
+- **Java 21**: `sudo apt install openjdk-21-jdk`
+- **Maven 3.9+**: `sudo apt install maven`
+- **Docker**: `sudo apt install docker.io docker-compose`
+
 ### Local Development
-1. **Start CockroachDB**:
-   ```bash
-   docker run -d --name cockroachdb -p 26257:26257 -p 8081:8080 cockroachdb/cockroach:v23.1.10 start-single-node --insecure --http-addr=0.0.0.0:8080
-   ```
 
-2. **Run the Application**:
-   ```bash
-   mvn spring-boot:run
-   ```
+#### 1. Database Setup
+```bash
+# Start PostgreSQL (for local development)
+docker run -d --name postgres -p 5432:5432 -e POSTGRES_DB=musicschool -e POSTGRES_USER=musicschool -e POSTGRES_PASSWORD=musicschool123 postgres:15-alpine
+```
 
-3. **Access**: http://localhost:8080/music-school
+#### 2. Build and Run
+```bash
+# Set Java 21
+export JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64
+export PATH=$JAVA_HOME/bin:$PATH
+
+# Quick build and run
+./quick-build.sh
+mvn spring-boot:run
+```
+
+#### 3. Access
+- **Application**: http://localhost:8080
+- **API Docs**: http://localhost:8080/swagger-ui.html
+- **Health Check**: http://localhost:8080/actuator/health
 
 ### Database Setup
 The application will automatically create the database schema on first run. The default configuration connects to:
@@ -163,6 +200,37 @@ Pre-configured dashboards include:
 - Secure API endpoints
 - Input validation and sanitization
 
+## 🛠️ Build Scripts
+
+### Available Scripts
+
+#### `build.sh` - Complete Build Process
+```bash
+./build.sh
+```
+**Features:**
+- ✅ Java 21 verification and setup
+- ✅ Clean previous builds
+- ✅ Run all tests
+- ✅ Package application
+- ✅ Prepare Docker files
+- ✅ Colored output with progress indicators
+
+#### `quick-build.sh` - Fast Development Build
+```bash
+./quick-build.sh
+```
+**Features:**
+- ⚡ Fast build without tests
+- 🚀 Perfect for development
+- 📦 Creates JAR file ready for deployment
+
+### Build Output
+After successful build:
+- **JAR File**: `target/music-school-management-1.0.0.jar`
+- **Docker Files**: `Dockerfile`, `docker-compose.yml`
+- **Ready for**: Direct execution or Docker deployment
+
 ## 📈 Performance
 
 ### Optimization Features
@@ -203,9 +271,30 @@ A dedicated Flyway service automatically applies migration scripts:
 ```
 You can **run just the migrations** with: `docker-compose up flyway` or have it run alongside application startup. [Updated for Flyway]
 
+## 📚 Documentation
+
+### Quick Start
+- **[QUICK_START.md](docs/QUICK_START.md)**: Get started in 5 minutes
+- **[BUILD_SCRIPTS.md](docs/BUILD_SCRIPTS.md)**: Detailed build scripts documentation
+- **[DEPLOYMENT.md](docs/DEPLOYMENT.md)**: Complete deployment guide
+- **[ARCHITECTURE.md](docs/ARCHITECTURE.md)**: Architecture overview
+- **[API.md](docs/API.md)**: REST API documentation
+
+### Project Information
+- **[PROJECT_SUMMARY.md](PROJECT_SUMMARY.md)**: Comprehensive project overview
+- **[CHANGELOG.md](CHANGELOG.md)**: Version history and changes
+- **[RELEASE_NOTES.md](RELEASE_NOTES.md)**: Release notes and features
+- **[CONTRIBUTING.md](CONTRIBUTING.md)**: Contributing guidelines
+- **[INDEX.md](docs/INDEX.md)**: Documentation index
+
+### Build Scripts
+- **`./build.sh`**: Complete build with tests and Docker preparation
+- **`./quick-build.sh`**: Fast development build without tests
+
 ## 📝 API Documentation
 
 ### REST Endpoints
-- `/music-school/actuator/health` - Health check
-- `/music-school/actuator/metrics` - Application metrics
-- `/music-school/actuator/prometheus`
+- `/actuator/health` - Health check
+- `/actuator/metrics` - Application metrics
+- `/actuator/prometheus` - Prometheus metrics
+- `/swagger-ui.html` - API documentation

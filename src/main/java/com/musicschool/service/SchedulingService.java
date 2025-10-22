@@ -172,11 +172,12 @@ public class SchedulingService {
         while (current.isBefore(endDate)) {
             LocalDateTime slotEnd = current.plusHours(1);
             
+            final LocalDateTime slotStart = current;
             boolean isAvailable = existingSchedules.stream()
-                .noneMatch(s -> isTimeOverlapping(current, slotEnd, s.getStartTime(), s.getEndTime()));
+                .noneMatch(s -> isTimeOverlapping(slotStart, slotEnd, s.getStartTime(), s.getEndTime()));
             
             if (isAvailable) {
-                availability.add(new TimeSlot(current, slotEnd));
+                availability.add(new TimeSlot(slotStart, slotEnd));
             }
             
             current = current.plusHours(1);
@@ -197,11 +198,12 @@ public class SchedulingService {
         while (current.isBefore(endDate)) {
             LocalDateTime slotEnd = current.plusHours(1);
             
+            final LocalDateTime slotStart = current;
             boolean isAvailable = existingSchedules.stream()
-                .noneMatch(s -> isTimeOverlapping(current, slotEnd, s.getStartTime(), s.getEndTime()));
+                .noneMatch(s -> isTimeOverlapping(slotStart, slotEnd, s.getStartTime(), s.getEndTime()));
             
             if (isAvailable) {
-                availability.add(new TimeSlot(current, slotEnd));
+                availability.add(new TimeSlot(slotStart, slotEnd));
             }
             
             current = current.plusHours(1);

@@ -11,6 +11,7 @@ import com.vaadin.flow.component.charts.model.DataSeries;
 import com.vaadin.flow.component.charts.model.DataSeriesItem;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.orderedlayout.FlexLayout;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
@@ -94,7 +95,7 @@ public class DashboardView extends VerticalLayout {
         titleSpan.addClassNames(LumoUtility.FontSize.SMALL, LumoUtility.TextColor.SECONDARY);
 
         card.add(iconSpan, valueSpan, titleSpan);
-        card.setAlignItems(FlexComponent.Alignment.CENTER);
+        card.setAlignItems(FlexLayout.Alignment.CENTER);
 
         return new Span(card);
     }

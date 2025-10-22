@@ -133,9 +133,12 @@ music-school-management/
 │       └── dashboards/musicschool-dashboard.json # Custom dashboard
 ├── scripts/
 │   └── start.sh                             # Startup script
+├── build.sh                                 # Complete build script
+├── quick-build.sh                           # Fast development build script
 ├── docs/                                    # Documentation
 │   ├── ARCHITECTURE.md                      # Architecture documentation
 │   ├── DEPLOYMENT.md                        # Deployment guide
+│   ├── BUILD_SCRIPTS.md                     # Build scripts documentation
 │   └── API.md                               # API documentation
 ├── docker-compose.yml                       # Docker Compose configuration
 ├── Dockerfile                               # Docker build configuration
@@ -174,13 +177,45 @@ All entities include audit fields:
 - Git
 
 ### 2. Clone and Build
+
+#### Option A: Using Build Scripts (Recommended)
 ```bash
 git clone <repository-url>
 cd Vaadin
-mvn clean package -DskipTests
+
+# Full build with tests and Docker preparation
+./build.sh
+
+# Or quick build for development
+./quick-build.sh
 ```
 
-### 3. Start with Docker Compose
+#### Option B: Manual Maven Build
+```bash
+git clone <repository-url>
+cd Vaadin
+
+# Set Java 21
+export JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64
+export PATH=$JAVA_HOME/bin:$PATH
+
+# Build application
+mvn clean package
+```
+
+### 3. Start the Application
+
+#### Option A: Using JAR file
+```bash
+java -jar target/music-school-management-1.0.0.jar
+```
+
+#### Option B: Using Maven
+```bash
+mvn spring-boot:run
+```
+
+#### Option C: Using Docker Compose
 ```bash
 # Start all services
 docker-compose up -d
@@ -221,6 +256,31 @@ docker-compose up -d
 - **Performance Metrics**: JVM and application performance
 - **Database Monitoring**: Connection and query metrics
 - **Business Metrics**: Student enrollment, revenue tracking
+
+## 🛠️ Build Scripts
+
+### Available Scripts
+
+#### `build.sh` - Complete Build Process
+- ✅ **Java 21 Verification**: Automatically checks and sets Java 21
+- ✅ **Clean Build**: Removes previous build artifacts
+- ✅ **Test Execution**: Runs all unit tests
+- ✅ **Package Creation**: Creates executable JAR file
+- ✅ **Docker Preparation**: Ensures Docker files are ready
+- ✅ **Colored Output**: Beautiful colored terminal output
+- ✅ **Error Handling**: Comprehensive error checking and reporting
+
+#### `quick-build.sh` - Fast Development Build
+- ⚡ **Fast Build**: Skips tests for faster development cycles
+- 🚀 **Development Ready**: Perfect for iterative development
+- 📦 **JAR Creation**: Creates deployable JAR file
+- 🎯 **Minimal Dependencies**: Only essential build steps
+
+### Build Output
+After successful build:
+- **JAR File**: `target/music-school-management-1.0.0.jar`
+- **Docker Files**: `Dockerfile`, `docker-compose.yml`
+- **Ready for**: Direct execution or Docker deployment
 
 ## 🧪 Testing Strategy
 
@@ -294,17 +354,25 @@ docker-compose up -d
 ## 📚 Documentation
 
 ### Comprehensive Documentation
-- **README.md**: Main project documentation
+- **README.md**: Main project documentation with quick start guide
 - **ARCHITECTURE.md**: Detailed architecture overview
-- **DEPLOYMENT.md**: Complete deployment guide
+- **DEPLOYMENT.md**: Complete deployment guide with cloud options
+- **BUILD_SCRIPTS.md**: Detailed build scripts documentation
 - **API.md**: REST API documentation
 - **PROJECT_SUMMARY.md**: This comprehensive summary
+
+### Build Scripts Documentation
+- **build.sh**: Complete build process with tests and Docker preparation
+- **quick-build.sh**: Fast development build without tests
+- **Error Handling**: Comprehensive error checking and reporting
+- **Colored Output**: Beautiful terminal output with progress indicators
 
 ### Code Documentation
 - JavaDoc comments for all classes
 - Inline code comments
 - Configuration documentation
 - Database schema documentation
+- Build process documentation
 
 ## 🎯 Future Enhancements
 

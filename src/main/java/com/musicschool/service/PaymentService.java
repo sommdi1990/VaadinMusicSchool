@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -81,8 +82,11 @@ public class PaymentService {
         try {
             PaymentIntent paymentIntent = PaymentIntent.retrieve(paymentIntentId);
             
-            Payment payment = paymentRepository.findByStripePaymentIntentId(paymentIntentId)
-                .orElseThrow(() -> new RuntimeException("Payment not found"));
+            List<Payment> payments = paymentRepository.findByStripePaymentIntentId(paymentIntentId);
+            if (payments.isEmpty()) {
+                throw new RuntimeException("Payment not found");
+            }
+            Payment payment = payments.get(0);
 
             if (paymentIntent.getStatus().equals("succeeded")) {
                 payment.setStatus(Payment.PaymentStatus.COMPLETED);

@@ -10,6 +10,7 @@ import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.orderedlayout.FlexLayout;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.EmailField;
@@ -22,6 +23,7 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.stream.Stream;
 
 /**
@@ -34,7 +36,6 @@ public class StudentsView extends VerticalLayout {
     private final StudentService studentService;
     private Grid<Student> grid;
     private TextField searchField;
-    private ConfigurableFilterDataProvider<Student, Void, String> dataProvider;
 
     public StudentsView(StudentService studentService) {
         this.studentService = studentService;
@@ -72,7 +73,7 @@ public class StudentsView extends VerticalLayout {
         refreshButton.addClickListener(e -> refreshGrid());
 
         toolbar.add(searchField, addButton, refreshButton);
-        toolbar.setJustifyContentMode(FlexComponent.JustifyContentMode.BETWEEN);
+        toolbar.setJustifyContentMode(FlexLayout.JustifyContentMode.BETWEEN);
 
         add(toolbar);
     }
@@ -107,29 +108,22 @@ public class StudentsView extends VerticalLayout {
     }
 
     private void loadData() {
-        dataProvider = DataProvider.fromFilteringCallbacks(
-            query -> {
-                Stream<Student> stream = studentService.findStudentsWithSearch(
-                    searchField.getValue(),
-                    query.getPageRequest()
-                ).getContent().stream();
-                return stream;
-            },
-            query -> (int) studentService.findStudentsWithSearch(
-                searchField.getValue(),
-                query.getPageRequest()
-            ).getTotalElements()
-        );
-
-        grid.setDataProvider(dataProvider);
+        // Load all students initially
+        List<Student> students = studentService.findAll();
+        grid.setItems(students);
 
         searchField.addValueChangeListener(e -> {
-            dataProvider.setFilter(e.getValue());
+            String searchTerm = e.getValue();
+            if (searchTerm == null || searchTerm.trim().isEmpty()) {
+                grid.setItems(studentService.findAll());
+            } else {
+                grid.setItems(studentService.findByNameContaining(searchTerm));
+            }
         });
     }
 
     private void refreshGrid() {
-        dataProvider.refreshAll();
+        grid.setItems(studentService.findAll());
     }
 
     private void openStudentDialog(Student student) {
@@ -186,7 +180,7 @@ public class StudentsView extends VerticalLayout {
         cancelButton.addClickListener(e -> dialog.close());
 
         HorizontalLayout buttonLayout = new HorizontalLayout(saveButton, cancelButton);
-        buttonLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.END);
+        buttonLayout.setJustifyContentMode(FlexLayout.JustifyContentMode.END);
 
         VerticalLayout dialogLayout = new VerticalLayout(formLayout, buttonLayout);
         dialog.add(dialogLayout);
