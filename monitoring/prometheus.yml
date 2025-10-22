@@ -1,0 +1,25 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+rule_files:
+  # - "first_rules.yml"
+  # - "second_rules.yml"
+
+scrape_configs:
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+
+  - job_name: 'musicschool-app'
+    static_configs:
+      - targets: ['musicschool-app:8080']
+    metrics_path: '/music-school/actuator/prometheus'
+    scrape_interval: 10s
+    scrape_timeout: 5s
+
+  - job_name: 'cockroachdb'
+    static_configs:
+      - targets: ['cockroachdb:8080']
+    metrics_path: '/_status/vars'
+    scrape_interval: 30s

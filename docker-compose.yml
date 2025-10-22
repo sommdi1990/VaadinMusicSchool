@@ -1,0 +1,89 @@
+version: '3.8'
+
+services:
+  # CockroachDB Database
+  cockroachdb:
+    image: cockroachdb/cockroach:v23.1.10
+    container_name: musicschool-db
+    command: start-single-node --insecure --http-addr=0.0.0.0:8080
+    ports:
+      - "26257:26257"
+      - "8081:8080"
+    volumes:
+      - cockroach-data:/cockroach/cockroach-data
+    environment:
+      - COCKROACH_DATABASE=musicschool
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+    networks:
+      - musicschool-network
+
+  # Music School Application
+  musicschool-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: musicschool-app
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - DB_USERNAME=root
+      - DB_PASSWORD=
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://cockroachdb:26257/musicschool?sslmode=disable
+      - ADMIN_PASSWORD=admin123
+    depends_on:
+      cockroachdb:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/music-school/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+    networks:
+      - musicschool-network
+
+  # Prometheus for monitoring
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: musicschool-prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--web.enable-lifecycle'
+    networks:
+      - musicschool-network
+
+  # Grafana for visualization
+  grafana:
+    image: grafana/grafana:latest
+    container_name: musicschool-grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin123
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - ./monitoring/grafana/dashboards:/etc/grafana/provisioning/dashboards
+      - ./monitoring/grafana/datasources:/etc/grafana/provisioning/datasources
+    networks:
+      - musicschool-network
+
+volumes:
+  cockroach-data:
+  grafana-data:
+
+networks:
+  musicschool-network:
+    driver: bridge
