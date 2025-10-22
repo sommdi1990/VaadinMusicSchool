@@ -5,6 +5,7 @@ A comprehensive music school management system built with Java 21, Spring Boot, 
 ## 🚀 Features
 
 ### Core Functionality
+- **Database Migrations**: Version-controlled schema migrations with Flyway [Updated for Flyway]
 - **Student Management**: Complete student registration, profiles, and enrollment tracking
 - **Instructor Management**: Instructor profiles, specializations, and course assignments
 - **Course Management**: Course creation, scheduling, and capacity management
@@ -13,6 +14,7 @@ A comprehensive music school management system built with Java 21, Spring Boot, 
 - **Reports**: Comprehensive reporting and analytics
 
 ### Technical Features
+- **Flyway Migration**: Manage SQL schema changes with versioned migrations—repeatable and reviewable [Updated for Flyway]
 - **Modern UI**: Built with Vaadin 24.9.3 for responsive, accessible web interface
 - **Java 21**: Latest LTS version with modern language features
 - **Spring Boot 3.2.0**: Enterprise-grade application framework
@@ -56,6 +58,17 @@ cd Vaadin
 ```bash
 mvn clean package -DskipTests
 ```
+
+### 2. Database Migration (Flyway)
+Run database migrations with Flyway before application startup:
+```bash
+docker-compose up flyway
+```
+یا برای اجرای همزمان با سایر سرویس‌ها:
+```bash
+docker-compose up
+```
+Flyway به صورت خودکار اسکریپت‌های  `src/main/resources/db/migration`  را اجرا می‌کند. [Updated for Flyway]
 
 ### 3. Run with Docker Compose
 ```bash
@@ -107,6 +120,8 @@ Pre-configured dashboards include:
 - Database connection monitoring
 
 ## 🗄️ Database Schema
+
+**Database migrations are managed by Flyway. Schema is NOT created automatically; use migration scripts in `src/main/resources/db/migration/` to modify structure.** [Updated for Flyway]
 
 ### Core Entities
 - **Students**: Personal information, contact details, skill level
@@ -174,120 +189,23 @@ Pre-configured dashboards include:
 - Security best practices
 - Logging configuration
 
+### Database Migration (Flyway)
+A dedicated Flyway service automatically applies migration scripts:
+```yaml
+  flyway:
+    image: flyway/flyway:10
+    command: -url=jdbc:postgresql://db:26257/musicschool?sslmode=require -user=musicschool -password=musicschool123 -connectRetries=20 migrate
+    volumes:
+      - ./src/main/resources/db/migration:/flyway/sql
+    depends_on:
+      - db
+    restart: on-failure
+```
+You can **run just the migrations** with: `docker-compose up flyway` or have it run alongside application startup. [Updated for Flyway]
+
 ## 📝 API Documentation
 
 ### REST Endpoints
 - `/music-school/actuator/health` - Health check
 - `/music-school/actuator/metrics` - Application metrics
-- `/music-school/actuator/prometheus` - Prometheus metrics
-
-### Vaadin Routes
-- `/dashboard` - Main dashboard
-- `/students` - Student management
-- `/instructors` - Instructor management
-- `/courses` - Course management
-- `/enrollments` - Enrollment management
-
-## 🧪 Testing
-
-### Unit Tests
-```bash
-mvn test
-```
-
-### Integration Tests
-```bash
-mvn verify
-```
-
-### End-to-End Tests
-```bash
-mvn test -Dtest=*E2ETest
-```
-
-## 📦 Deployment
-
-### Production Build
-```bash
-mvn clean package -Pproduction
-```
-
-### Docker Production
-```bash
-docker build -t musicschool:latest .
-docker run -p 8080:8080 musicschool:latest
-```
-
-### Environment Variables
-- `DB_USERNAME`: Database username
-- `DB_PASSWORD`: Database password
-- `ADMIN_PASSWORD`: Admin user password
-- `SPRING_PROFILES_ACTIVE`: Active profile (docker, production)
-
-## 🔧 Configuration
-
-### Application Properties
-```yaml
-spring:
-  datasource:
-    url: jdbc:postgresql://localhost:26257/musicschool?sslmode=require
-    username: ${DB_USERNAME:musicschool}
-    password: ${DB_PASSWORD:musicschool123}
-  
-  jpa:
-    hibernate:
-      ddl-auto: update
-    show-sql: false
-```
-
-### Monitoring Configuration
-```yaml
-management:
-  endpoints:
-    web:
-      exposure:
-        include: health,info,metrics,prometheus
-```
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests for new functionality
-5. Submit a pull request
-
-## 📄 License
-
-This project is licensed under the Apache License 2.0 - see the [LICENSE](LICENSE) file for details.
-
-## 🆘 Support
-
-For support and questions:
-- Create an issue in the repository
-- Check the documentation
-- Review the logs for troubleshooting
-
-## 🔄 Version History
-
-- **v1.0.0**: Initial release with core functionality
-  - Student and instructor management
-  - Course and enrollment system
-  - Dashboard and reporting
-  - Docker containerization
-  - Monitoring and observability
-
-## 🎯 Roadmap
-
-- [ ] Advanced reporting and analytics
-- [ ] Payment processing integration
-- [ ] Mobile application
-- [ ] Advanced scheduling features
-- [ ] Multi-tenant support
-- [ ] API documentation with OpenAPI
-- [ ] Advanced security features
-- [ ] Performance optimization
-
----
-
-**Built with ❤️ using Java 21, Spring Boot, Vaadin, and CockroachDB**
+- `/music-school/actuator/prometheus`

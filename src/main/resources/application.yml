@@ -1,13 +1,11 @@
 spring:
   application:
     name: music-school-management
-  
   datasource:
     url: jdbc:postgresql://localhost:26257/musicschool?sslmode=require
     username: ${DB_USERNAME:musicschool}
     password: ${DB_PASSWORD:musicschool123}
     driver-class-name: org.postgresql.Driver
-    
   jpa:
     hibernate:
       ddl-auto: update
@@ -19,12 +17,41 @@ spring:
         jdbc:
           time_zone: UTC
     open-in-view: false
-    
   security:
     user:
       name: admin
       password: ${ADMIN_PASSWORD:admin123}
       roles: ADMIN
+  mail:
+    host: ${MAIL_HOST:smtp.gmail.com}
+    port: ${MAIL_PORT:587}
+    username: ${MAIL_USERNAME:}
+    password: ${MAIL_PASSWORD:}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+  cache:
+    type: jcache
+    jcache:
+      config: classpath:ehcache.xml
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD:}
+      timeout: 2000ms
+      lettuce:
+        pool:
+          max-active: 8
+          max-idle: 8
+          min-idle: 0
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
 
 server:
   port: 8080
@@ -35,14 +62,18 @@ management:
   endpoints:
     web:
       exposure:
-        include: health,info,metrics,prometheus
+        include: health,info,metrics,prometheus,beans,env,configprops
   endpoint:
     health:
       show-details: always
-  metrics:
-    export:
-      prometheus:
+  prometheus:
+    metrics:
+      export:
         enabled: true
+  metrics:
+    distribution:
+      percentiles-histogram:
+        http.server.requests: true
 
 logging:
   level:
@@ -58,3 +89,25 @@ vaadin:
   productionMode: false
   closeIdleSessions: true
   heartbeatInterval: 300
+
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    operationsSorter: method
+    tagsSorter: alpha
+    tryItOutEnabled: true
+
+jwt:
+  secret: ${JWT_SECRET:mySecretKey}
+  expiration: 86400
+
+stripe:
+  secret-key: ${STRIPE_SECRET_KEY:sk_test_...}
+  publishable-key: ${STRIPE_PUBLISHABLE_KEY:pk_test_...}
+
+multitenancy:
+  default-tenant: default
+  tenant-header: X-Tenant-ID
+  tenant-parameter: tenant

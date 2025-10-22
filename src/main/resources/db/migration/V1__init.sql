@@ -1,0 +1,7 @@
+CREATE TABLE IF NOT EXISTS tenant (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(128) NOT NULL,
+    domain VARCHAR(128) UNIQUE NOT NULL,
+    contact_email VARCHAR(128),
+    created_at TIMESTAMP DEFAULT NOW()
+);
