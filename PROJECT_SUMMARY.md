@@ -215,7 +215,7 @@ git clone <repository-url>
 cd Vaadin
 
 # Set Java 21
-export JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64
+export JAVA_HOME=/home/soroush/.jdks/graalvm-jdk-21.0.8
 export PATH=$JAVA_HOME/bin:$PATH
 
 # Build application

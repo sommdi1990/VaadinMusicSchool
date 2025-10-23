@@ -42,8 +42,7 @@ public class VaadinSecurityConfig {
                         .requestMatchers("/api/public/**").permitAll()
                         .anyRequest().authenticated()
                 )
-                .httpBasic()
-                .and()
+                .httpBasic(httpBasic -> httpBasic.realmName("Music School Management"))
                 .csrf(csrf -> csrf.disable());
 
         return http.build();

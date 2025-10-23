@@ -8,14 +8,14 @@ WORKDIR /app
 # Copy source code and pom.xml
 COPY . .
 
-# Build the application
-RUN mvn clean package -DskipTests
+# Build the application with frontend
+RUN mvn clean package -DskipTests -Dvaadin.commercialWithBanner
 
-# Stage 2: Runtime image
-FROM eclipse-temurin:21-jre as runtime
+# Stage 2: Runtime image with GraalVM
+FROM ghcr.io/graalvm/graalvm-community:21 as runtime
 
 # Install curl for health checks
-RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
+RUN apk add --no-cache curl
 
 # Create app user
 RUN groupadd -r musicschool && useradd -r -g musicschool musicschool

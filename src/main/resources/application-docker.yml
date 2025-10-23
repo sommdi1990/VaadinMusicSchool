@@ -81,6 +81,6 @@ logging:
     name: /app/logs/music-school.log
 
 vaadin:
-  productionMode: true
+  productionMode: false
   closeIdleSessions: true
   heartbeatInterval: 300

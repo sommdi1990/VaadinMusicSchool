@@ -13,7 +13,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @version 1.0.0
  */
 @SpringBootApplication(exclude = {
-        com.vaadin.flow.spring.SpringSecurityAutoConfiguration.class
+        com.vaadin.flow.spring.SpringSecurityAutoConfiguration.class,
+        org.springframework.boot.autoconfigure.data.rest.RepositoryRestMvcAutoConfiguration.class,
+        org.springdoc.core.configuration.SpringDocDataRestConfiguration.class,
+        org.springframework.boot.autoconfigure.amqp.RabbitAutoConfiguration.class
 })
 public class MusicSchoolApplication {
 

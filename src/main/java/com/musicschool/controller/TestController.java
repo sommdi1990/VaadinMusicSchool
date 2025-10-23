@@ -11,8 +11,9 @@ public class TestController {
         return "Test endpoint - no authentication required";
     }
 
-    @GetMapping("/")
-    public String home() {
-        return "Home endpoint - no authentication required";
-    }
+    // Removed home endpoint to allow Vaadin routing to work properly
+    // @GetMapping("/")
+    // public String home() {
+    //     return "Home endpoint - no authentication required";
+    // }
 }

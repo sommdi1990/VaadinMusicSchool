@@ -3,8 +3,8 @@ spring:
     name: music-school-management
   datasource:
     url: jdbc:postgresql://localhost:26257/musicschool?sslmode=disable
-    username: ${DB_USERNAME:musicschool}
-    password: ${DB_PASSWORD:musicschool123}
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:}
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:

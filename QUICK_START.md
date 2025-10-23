@@ -143,7 +143,7 @@ mvn spring-boot:run
 
 ### 1. Set Java 21
 ```bash
-export JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64
+export JAVA_HOME=/home/soroush/.jdks/graalvm-jdk-21.0.8
 export PATH=$JAVA_HOME/bin:$PATH
 
 # Verify Java version
@@ -219,7 +219,7 @@ mvn test -Dtest=StudentServiceTest
 # Error: Java version is not 21
 # Solution: Install Java 21
 sudo apt install openjdk-21-jdk
-export JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64
+export JAVA_HOME=/home/soroush/.jdks/graalvm-jdk-21.0.8
 ```
 
 #### 2. Maven Issues

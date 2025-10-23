@@ -113,7 +113,7 @@ The system comes pre-loaded with:
 #### Option B: Manual Maven Build
 ```bash
 # Set Java 21
-export JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64
+export JAVA_HOME=/home/soroush/.jdks/graalvm-jdk-21.0.8
 export PATH=$JAVA_HOME/bin:$PATH
 
 # Build application
@@ -165,7 +165,7 @@ docker run -d --name postgres -p 5432:5432 -e POSTGRES_DB=musicschool -e POSTGRE
 #### 2. Build and Run
 ```bash
 # Set Java 21
-export JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64
+export JAVA_HOME=/home/soroush/.jdks/graalvm-jdk-21.0.8
 export PATH=$JAVA_HOME/bin:$PATH
 
 # Quick build and run
