@@ -1,7 +1,11 @@
 package com.musicschool.controller;
 
+import com.musicschool.entity.Course;
 import com.musicschool.entity.Payment;
+import com.musicschool.entity.Student;
+import com.musicschool.service.CourseService;
 import com.musicschool.service.PaymentService;
+import com.musicschool.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +26,10 @@ public class PaymentController {
 
     @Autowired
     private PaymentService paymentService;
+    @Autowired
+    private StudentService studentService;
+    @Autowired
+    private CourseService courseService;
 
     /**
      * Create a payment intent for course fees
@@ -33,11 +41,11 @@ public class PaymentController {
             @RequestParam Long studentId,
             @RequestParam Long courseId,
             @RequestParam String description) {
-        
-        // Get student and course entities (simplified for demo)
-        // In real implementation, you would fetch these from repositories
+        // دانش‌آموز و دوره را از سرویس بگیر
+        Student student = studentService.findById(studentId).orElseThrow(() -> new RuntimeException("Student not found"));
+        Course course = courseService.findById(courseId).orElseThrow(() -> new RuntimeException("Course not found"));
         Map<String, Object> response = paymentService.createPaymentIntent(
-            amount, currency, null, null, description);
+                amount, currency, student, course, description);
         return ResponseEntity.ok(response);
     }
 

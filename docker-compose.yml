@@ -1,9 +1,9 @@
 services:
   # CockroachDB Database
   cockroachdb:
-    image: cockroachdb/cockroach:v23.1.10
+    image: cockroachdb/cockroach:v23.2.0
     container_name: musicschool-db
-    command: start-single-node --insecure --http-addr=0.0.0.0:8080
+    command: start-single-node --insecure --http-addr=0.0.0.0:8080 --listen-addr=0.0.0.0:26257
     ports:
       - "26257:26257"
       - "8081:8080"
@@ -11,6 +11,7 @@ services:
       - cockroach-data:/cockroach/cockroach-data
     environment:
       - COCKROACH_DATABASE=musicschool
+      - COCKROACH_DEVELOPER_MODE=true
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
       interval: 30s
@@ -24,7 +25,7 @@ services:
   musicschool-app:
     build:
       context: .
-      dockerfile: Dockerfile.simple
+      dockerfile: Dockerfile
     container_name: musicschool-app
     ports:
       - "8080:8080"
