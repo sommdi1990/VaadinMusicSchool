@@ -565,3 +565,74 @@ resources:
     memory: "2Gi"
     cpu: "1000m"
 ```
+
+---
+
+## رفع مشکل تنظیمات امنیتی، دیده نشدن تغییرات و دسترسی Home بدون لاگین (Troubleshooting Security & Rebuild)
+
+### مراحل پیشنهادی — فارسی
+
+۱. **ساخت مجدد ایمیج و پاک کردن cache**
+
+```bash
+docker-compose down
+docker-compose build --no-cache
+docker-compose up -d
+```
+
+۲. **بررسی کپی شدن فایل‌های جدید داخل ایمیج**
+
+اگر در Dockerfile چیزی مانند این دارید:
+
+```dockerfile
+COPY src/ /app/src/
+COPY src/main/resources/application.yml /app/src/main/resources/application.yml
+```
+
+مطابق ساختار پوشه اطمینان حاصل کنید مسیر درست است و فایل کانفیگ جدید واقعاً وارد ایمیج داکر می‌شود.
+
+۳. **بررسی لاگ برنامه (backend/java)**
+
+```bash
+docker-compose logs backend  # یا نام سرویس جاوای خود را جایگزین کنید
+```
+
+۴. **بررسی متغیرهای env و رمز دیتابیس**
+
+اگر رمز یا نام کاربر دیتابیس در env.production یا docker-compose.yml ست شده، مقدار صحیح را بررسی کنید.
+در فرآیند شروع، اگر خطایی مثل `password authentication failed` یا `The server does not support SSL` دریافت می‌کنید باید
+تنظیمات database را اصلاح یا با DBA هماهنگ کنید.
+
+۵. **بررسی پاسخ API از درون کانتینر**
+
+```bash
+docker exec -it [container-name] curl -I http://localhost:8080
+```
+
+----
+
+### خلاصه (en)
+
+- Always rebuild the Docker image after Java/Security config changes:  
+  `docker-compose build --no-cache && docker-compose up -d`
+- Verify new YAML/Java config is properly copied into the image (check Dockerfile COPY lines).
+- Check backend logs with: `docker-compose logs backend`
+- Fix DB credentials in `env.production` or `docker-compose.yml` if you see DB errors.
+- Test your endpoints *inside* the running container with `curl` for most accurate error info.
+
+---
+
+## علت نیاز به این مراحل
+
+وقتی فایل‌های تنظیمات از جمله Security یا application.yml را تغییر می‌دهید:
+
+- داکر باید مجدداً ایمیج بسازد، وگرنه تغییرات جدید داخل کانتینر نمی‌رود.
+- ممکن است مشکل دسترسی دیتابیس در محیط داکر با لوکال فرق داشته باشد.
+- برای اینکه Home بدون نیاز به لاگین نمایش داده شود، حتماً باید سرویس جدید (rebuild + restart) شود تا فایل‌های امنیتی
+  جدید اعمال شود.
+
+---
+
+اگر بعد از این مراحل ارور یا رفتار غیرمنتظره مشاهده کردید، لاگ کامل سرویس را بررسی کنید و در اختیار تیم توسعه قرار دهید.
+
+---

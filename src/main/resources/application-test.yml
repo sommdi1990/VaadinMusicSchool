@@ -1,0 +1,39 @@
+spring:
+  application:
+    name: music-school-management
+  datasource:
+    url: jdbc:h2:mem:testdb
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+        format_sql: true
+        jdbc:
+          time_zone: UTC
+    open-in-view: false
+  flyway:
+    enabled: false
+  h2:
+    console:
+      enabled: true
+
+server:
+  port: 8080
+
+vaadin:
+  productionMode: false
+  closeIdleSessions: true
+  heartbeatInterval: 300
+
+logging:
+  level:
+    com.musicschool: DEBUG
+    org.springframework.security: DEBUG
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"

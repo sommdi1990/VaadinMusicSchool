@@ -1,0 +1,2 @@
+-- This migration is now handled in V1__init.sql
+-- The tenant_id column and foreign key constraint are already created

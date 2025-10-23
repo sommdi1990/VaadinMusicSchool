@@ -4,7 +4,6 @@ import com.musicschool.entity.User;
 import com.musicschool.repository.UserRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -16,7 +15,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
-import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.crypto.SecretKey;
@@ -27,7 +25,8 @@ import java.util.Optional;
 /**
  * JWT Request Filter for processing JWT tokens in requests.
  */
-@Component
+// Temporarily disabled due to Spring Security compatibility issues
+// @Component
 public class JwtRequestFilter extends OncePerRequestFilter {
 
     @Autowired

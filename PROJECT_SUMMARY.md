@@ -28,6 +28,25 @@ A comprehensive music school management system built with modern Java technologi
 
 ## 🚀 Key Features
 
+### 🎨 Modern Web Interface
+
+✅ **Beautiful Home Page**
+
+- Hero section with call-to-action
+- Instrument showcase with pricing
+- Team member profiles
+- Student testimonials
+- Articles and news section
+- Contact form and information
+
+✅ **User Authentication & Registration**
+
+- Secure login/logout system
+- User registration with validation
+- Password encryption with BCrypt
+- Account lockout protection
+- Email verification system
+
 ### Core Functionality
 ✅ **Student Management**
 - Complete student profiles with contact information
@@ -392,6 +411,37 @@ After successful build:
 - [ ] Database optimization
 - [ ] Monitoring enhancements
 - [ ] Performance improvements
+
+## 🔐 Default Credentials & Access
+
+### Admin Access
+
+- **Username**: `admin`
+- **Email**: `admin@musicschool.com`
+- **Password**: `admin123`
+- **Role**: ADMIN
+
+### Sample Users
+
+- **Instructor**: `instructor1` / `instructor1@musicschool.com` / `admin123`
+- **Student**: `student1` / `student1@musicschool.com` / `admin123`
+
+### Access URLs
+
+- **Application**: http://localhost:8080/music-school/
+- **Database Admin**: http://localhost:8081
+- **Grafana**: http://localhost:3000 (admin/admin)
+- **Prometheus**: http://localhost:9090
+- **Mock Email Server**: http://localhost:3001
+
+### Sample Data
+
+The system includes pre-loaded sample data:
+
+- 6 instructors with different specializations
+- 5 students with various skill levels
+- 6 courses covering different instruments
+- Sample enrollments, schedules, and payments
 
 ## 🤝 Contributing
 

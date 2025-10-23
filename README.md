@@ -54,9 +54,54 @@ git clone <repository-url>
 cd Vaadin
 ```
 
-### 2. Build the Application
+### 2. Start with Docker Compose (Recommended)
 
-#### Option A: Using Build Scripts (Recommended)
+```bash
+# Start all services
+docker-compose up -d
+
+# Check service status
+docker-compose ps
+
+# View logs
+docker-compose logs -f
+```
+
+### 3. Access the Application
+
+- **Application**: http://localhost:8080/music-school/
+- **Database Admin**: http://localhost:8081
+- **Grafana**: http://localhost:3000 (admin/admin)
+- **Prometheus**: http://localhost:9090
+- **Mock Email Server**: http://localhost:3001
+
+## 🔐 Default Credentials
+
+### Admin User
+
+- **Username**: `admin`
+- **Email**: `admin@musicschool.com`
+- **Password**: `admin123`
+- **Role**: ADMIN
+
+### Sample Users
+
+- **Instructor**: `instructor1` / `instructor1@musicschool.com` / `admin123`
+- **Student**: `student1` / `student1@musicschool.com` / `admin123`
+
+### Sample Data
+
+The system comes pre-loaded with:
+
+- 6 instructors with different specializations
+- 5 students with various skill levels
+- 6 courses covering different instruments
+- Sample enrollments and schedules
+- Payment records and audit logs
+
+### 4. Build the Application (Alternative)
+
+#### Option A: Using Build Scripts
 ```bash
 # Full build with tests
 ./build.sh
@@ -279,6 +324,7 @@ You can **run just the migrations** with: `docker-compose up flyway` or have it 
 - **[DEPLOYMENT.md](docs/DEPLOYMENT.md)**: Complete deployment guide
 - **[ARCHITECTURE.md](docs/ARCHITECTURE.md)**: Architecture overview
 - **[API.md](docs/API.md)**: REST API documentation
+- **[DOCKER_SETUP.md](VaadinMusicSchool.wiki/DOCKER_SETUP.md)**: Complete Docker setup and database migration guide
 
 ### Project Information
 - **[PROJECT_SUMMARY.md](PROJECT_SUMMARY.md)**: Comprehensive project overview

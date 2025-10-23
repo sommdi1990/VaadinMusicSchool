@@ -3,7 +3,6 @@ package com.musicschool.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -12,7 +11,7 @@ import java.util.List;
  * Entity representing a tenant (music school) in the multi-tenant system.
  */
 @Entity
-@Table(name = "tenants")
+@Table(name = "tenant")
 public class Tenant extends BaseEntity {
 
     @NotBlank(message = "Tenant name is required")

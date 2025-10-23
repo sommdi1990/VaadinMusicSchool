@@ -67,6 +67,10 @@ public class Course extends BaseEntity {
     @Column(name = "room")
     private String room;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "tenant_id", nullable = false)
+    private Tenant tenant;
+
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Enrollment> enrollments = new ArrayList<>();
 
@@ -191,6 +195,14 @@ public class Course extends BaseEntity {
 
     public void setRoom(String room) {
         this.room = room;
+    }
+
+    public Tenant getTenant() {
+        return tenant;
+    }
+
+    public void setTenant(Tenant tenant) {
+        this.tenant = tenant;
     }
 
     public List<Enrollment> getEnrollments() {

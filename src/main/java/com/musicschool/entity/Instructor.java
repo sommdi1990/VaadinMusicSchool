@@ -64,6 +64,10 @@ public class Instructor extends BaseEntity {
     @OneToMany(mappedBy = "instructor", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Course> courses = new ArrayList<>();
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "tenant_id")
+    private Tenant tenant;
+
     // Constructors
     public Instructor() {}
 
@@ -185,6 +189,14 @@ public class Instructor extends BaseEntity {
 
     public void setCourses(List<Course> courses) {
         this.courses = courses;
+    }
+
+    public Tenant getTenant() {
+        return tenant;
+    }
+
+    public void setTenant(Tenant tenant) {
+        this.tenant = tenant;
     }
 
     // Helper methods

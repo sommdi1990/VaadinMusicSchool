@@ -9,7 +9,7 @@ WORKDIR /app
 COPY . .
 
 # Build the application
-RUN mvn clean package -DskipTests -Dvaadin.productionMode=false -Dvaadin.skip
+RUN mvn clean package -DskipTests
 
 # Stage 2: Runtime image
 FROM eclipse-temurin:21-jre as runtime
@@ -37,7 +37,7 @@ EXPOSE 8080
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=3s --start-period=60s --retries=3 \
-  CMD curl -f http://localhost:8080/music-school/actuator/health || exit 1
+  CMD curl -f http://localhost:8080/actuator/health || exit 1
 
 # Set JVM options for containerized environment
 ENV JAVA_OPTS="-Xmx512m -Xms256m -XX:+UseContainerSupport -XX:MaxRAMPercentage=75.0"

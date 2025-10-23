@@ -1,0 +1,63 @@
+services:
+  # Mock Email Server for Testing
+  mock-email-server:
+    build:
+      context: ./mock-email-server
+      dockerfile: Dockerfile
+    container_name: musicschool-mock-email-test
+    ports:
+      - "3000:3000"  # Web UI port
+      - "1025:1025"  # SMTP port
+    environment:
+      - PORT=3000
+      - SMTP_PORT=1025
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:3000/health" ]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
+    networks:
+      - test-network
+
+  # Test Database (H2 in-memory)
+  test-db:
+    image: h2database/h2:latest
+    container_name: musicschool-test-db
+    ports:
+      - "8082:8082"
+    environment:
+      - H2_OPTIONS=-web -webAllowOthers -webPort 8082
+    networks:
+      - test-network
+
+  # Music School Application (Test Profile)
+  musicschool-app-test:
+    build:
+      context: .
+      dockerfile: Dockerfile.simple
+    container_name: musicschool-app-test
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=test
+      - MAIL_HOST=mock-email-server
+      - MAIL_PORT=1025
+      - MAIL_USERNAME=
+      - MAIL_PASSWORD=
+      - MANAGEMENT_HEALTH_MAIL_ENABLED=false
+    depends_on:
+      mock-email-server:
+        condition: service_healthy
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8080/music-school/actuator/health" ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+    networks:
+      - test-network
+
+networks:
+  test-network:
+    driver: bridge
